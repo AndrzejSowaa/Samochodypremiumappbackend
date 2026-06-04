@@ -33,7 +33,8 @@ DB_CONFIG = {
     'password': 'w8Ae5ozeNj04ym8Y09aJKCBi5Z05ZS8R',
     'database': 'moje_auto_db',
     'host': 'dpg-d8glcsek1jcs73d4mfp0-a.frankfurt-postgres.render.com',
-    'port': 5432
+    'port': 5432,
+    'ssl': 'require'
 }
 
 JWT_SECRET = os.getenv('JWT_SECRET', 'awaryjny_klucz_jesli_brak_env')
