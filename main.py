@@ -29,15 +29,17 @@ if os.getenv('RENDER') is None:
     load_dotenv()
 
 # TYMCZASOWO - wklejamy dane bezpośrednio z panelu bazy
-DB_CONFIG = {
-    'user': 'moje_auto_db_user',
-    'password': 'w8Ae5ozeNj04ym8Y09aJKCBi5Z05ZS8R',
-    'database': 'moje_auto_db',
-    'host': 'dpg-d8glcsek1jcs73d4mfp0-a.frankfurt-postgres.render.com',
-    'port': 5432,
-    'ssl': 'require'
-}
+# DB_CONFIG = {
+#     'user': 'moje_auto_db_user',
+#     'password': 'w8Ae5ozeNj04ym8Y09aJKCBi5Z05ZS8R',
+#     'database': 'moje_auto_db',
+#     'host': 'dpg-d8glcsek1jcs73d4mfp0-a.frankfurt-postgres.render.com',
+#     'port': 5432,
+#     'ssl': 'require'
+# }
 
+DATABASE_URL = os.environ.get("DATABASE_URL")
+# Teraz użyj DATABASE_URL do połączenia
 JWT_SECRET = os.getenv('JWT_SECRET', 'awaryjny_klucz_jesli_brak_env')
 ALGORITHM = "HS256"
 
@@ -45,7 +47,7 @@ ALGORITHM = "HS256"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global pool
-    pool = await asyncpg.create_pool(**DB_CONFIG)
+    pool = await asyncpg.create_pool(dsn=DATABASE_URL)
     yield
     await pool.close()
 
