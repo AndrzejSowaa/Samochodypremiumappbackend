@@ -32,7 +32,7 @@ DB_CONFIG = {
     'password': os.getenv('DB_PASSWORD'),
     'database': os.getenv('DB_NAME'),
     'host': os.getenv('DB_HOST'),
-    'port': os.getenv('DB_PORT', 5432)
+    'port': int(os.getenv('DB_PORT', 5432))
 }
 
 JWT_SECRET = os.getenv('JWT_SECRET', 'awaryjny_klucz_jesli_brak_env')
