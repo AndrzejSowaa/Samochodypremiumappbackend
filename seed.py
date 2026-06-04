@@ -11,13 +11,19 @@ async def seed_database():
     print("Rozpoczynam seedowanie bazy danych...")
     
     # Nawiązanie połączenia
-    conn = await asyncpg.connect(
-        user=os.getenv('DB_USER'),
-        password=os.getenv('DB_PASSWORD'),
-        database=os.getenv('DB_NAME'),
-        host=os.getenv('DB_HOST'),
-        port=os.getenv('DB_PORT')
-    )
+    # conn = await asyncpg.connect(
+    #     user=os.getenv('DB_USER'),
+    #     password=os.getenv('DB_PASSWORD'),
+    #     database=os.getenv('DB_NAME'),
+    #     host=os.getenv('DB_HOST'),
+    #     port=os.getenv('DB_PORT')
+    # )
+
+    database_url = os.getenv('DATABASE_URL')
+    if database_url and "ssl" not in database_url:
+        database_url += "?ssl=require"
+
+    conn = await asyncpg.connect(database_url)
 
     try:
         # 1. Upewniamy się, że podstawowe role istnieją w bazie
