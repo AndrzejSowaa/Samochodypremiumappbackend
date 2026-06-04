@@ -25,7 +25,8 @@ from dotenv import load_dotenv
 security = HTTPBearer()
 pool = None
 
-load_dotenv()
+if os.getenv('RENDER') is None:
+    load_dotenv()
 
 # TYMCZASOWO - wklejamy dane bezpośrednio z panelu bazy
 DB_CONFIG = {
