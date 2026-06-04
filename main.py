@@ -19,20 +19,21 @@ from dotenv import load_dotenv
 #     'port': 5432
 # }
 
-JWT_SECRET = os.getenv('JWT_SECRET', 'tajny_klucz_do_zegarkow_123')
-ALGORITHM = "HS256"
+# JWT_SECRET = os.getenv('JWT_SECRET', 'tajny_klucz_do_zegarkow_123')
+# ALGORITHM = "HS256"
 
 security = HTTPBearer()
 pool = None
 
 load_dotenv()
 
+# TYMCZASOWO - wklejamy dane bezpośrednio z panelu bazy
 DB_CONFIG = {
-    'user': os.getenv('DB_USER'),
-    'password': os.getenv('DB_PASSWORD'),
-    'database': os.getenv('DB_NAME'),
-    'host': os.getenv('DB_HOST'),
-    'port': int(os.getenv('DB_PORT', 5432))
+    'user': 'moje_auto_db_user',
+    'password': 'w8Ae5ozeNj04ym8Y09aJKCBi5Z05ZS8R',
+    'database': 'moje_auto_db',
+    'host': 'dpg-d8glcsek1jcs73d4mfp0-a.frankfurt-postgres.render.com',
+    'port': 5432
 }
 
 JWT_SECRET = os.getenv('JWT_SECRET', 'awaryjny_klucz_jesli_brak_env')
