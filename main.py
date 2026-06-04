@@ -11,15 +11,15 @@ from contextlib import asynccontextmanager
 import os
 from dotenv import load_dotenv
 
-DB_CONFIG = {
-    'user': 'postgres',
-    'password': 'puchatek123',
-    'database': 'dbwatch',
-    'host': 'localhost',
-    'port': 5432
-}
+# DB_CONFIG = {
+#    'user': 'postgres',
+#    'password': 'puchatek123',
+#     'database': 'dbwatch',
+#     'host': 'localhost',
+#     'port': 5432
+# }
 
-JWT_SECRET = 'tajny_klucz_do_zegarkow_123'
+JWT_SECRET = os.getenv('JWT_SECRET', 'tajny_klucz_do_zegarkow_123')
 ALGORITHM = "HS256"
 
 security = HTTPBearer()
