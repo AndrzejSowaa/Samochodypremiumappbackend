@@ -169,15 +169,49 @@ async def root():
     return {"message": "Backend działa!"}
 
 @app.get("/watches")
-async def get_watches():
+async def get_watches(request: Request):
+    # Próbujemy ręcznie odczytać nagłówek Authorization, aby nie blokować niezalogowanych
+    auth_header = request.headers.get("Authorization")
+    is_logged_in = False
+    
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.split(" ")[1]
+        try:
+            jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM])
+            is_logged_in = True
+        except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
+            is_logged_in = False # Token niepoprawny lub wygasł -> traktujemy jako niezalogowanego
+
     async with pool.acquire() as conn:
         try:
             watches = await conn.fetch('SELECT * FROM "Watch" ORDER BY id ASC')
-            return [dict(w) for w in watches]
+            
+            result = []
+            for w in watches:
+                watch_dict = dict(w)
+                if is_logged_in:
+                    # Zalogowany widzi pełną strukturę (razem z nowymi parametrami)
+                    result.append(watch_dict)
+                else:
+                    # Niezalogowany widzi TYLKO bezpieczne minimum
+                    result.append({
+                        "id": watch_dict["id"],
+                        "brand": watch_dict["brand"],
+                        "model": watch_dict["model"],
+                        "image_url": watch_dict["image_url"],
+                        "status": watch_dict["status"],
+                        # Ukryte bezpieczne wartości domyślne, by frontend się nie wysypał:
+                        "price_pln": 0, 
+                        "description": "Zaloguj się, aby zobaczyć opis i specyfikację.",
+                        "year": None,
+                        "mileage": None,
+                        "power_hp": None,
+                        "fuel_type": None
+                    })
+            return result
         except Exception as e:
             print(f"Błąd bazy danych: {e}")
             raise HTTPException(status_code=500, detail="Błąd bazy danych")
-
 @app.get("/watches/{id}")
 async def get_watch(id: int):
     async with pool.acquire() as conn:
