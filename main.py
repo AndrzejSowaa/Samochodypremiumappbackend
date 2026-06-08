@@ -202,7 +202,7 @@ async def get_watches(request: Request):
                         "status": watch_dict["status"],
                         # Ukryte bezpieczne wartości domyślne, by frontend się nie wysypał:
                         "price_pln": 0, 
-                        "description": "Zaloguj się, aby zobaczyć opis i specyfikację.",
+                        "description": watch_dict["description"],
                         "year": None,
                         "mileage": None,
                         "power_hp": None,
