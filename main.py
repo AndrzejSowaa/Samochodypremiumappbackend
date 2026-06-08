@@ -218,7 +218,7 @@ async def get_watch(id: int):
         try:
             watch = await conn.fetchrow('SELECT * FROM "Watch" WHERE id = $1', id)
             if not watch:
-                raise HTTPException(status_code=404, detail="Zegarek nie znaleziony")
+                raise HTTPException(status_code=404, detail="Samochód nie znaleziony")
             return dict(watch)
         except HTTPException:
             raise
@@ -277,7 +277,7 @@ async def create_watch(watch: WatchCreate, current_user: dict = Depends(get_curr
             )
             return dict(new_watch)
         except Exception as e:
-            raise HTTPException(status_code=500, detail="Błąd dodawania zegarka do bazy")
+            raise HTTPException(status_code=500, detail="Błąd dodawania samochodu do bazy")
 
 @app.delete("/watches/{id}")
 async def delete_watch(id: int, current_user: dict = Depends(get_current_user)):
@@ -285,7 +285,7 @@ async def delete_watch(id: int, current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=403, detail="Brak uprawnień")
     async with pool.acquire() as conn:
         await conn.execute('DELETE FROM "Watch" WHERE id = $1', id)
-        return {"message": "Zegarek usunięty"}
+        return {"message": "Samochód usunięty"}
 
 @app.put("/watches/{id}")
 async def update_watch_full(id: int, watch_data: WatchUpdate, current_user: dict = Depends(get_current_user)):
@@ -300,10 +300,10 @@ async def update_watch_full(id: int, watch_data: WatchUpdate, current_user: dict
                 watch_data.brand, watch_data.model, watch_data.description, watch_data.price_pln, watch_data.status, watch_data.image_url, id
             )
             if not updated:
-                raise HTTPException(status_code=404, detail="Zegarek nie znaleziony")
+                raise HTTPException(status_code=404, detail="Samochód nie znaleziony")
             return dict(updated)
         except Exception as e:
-            print(f"Błąd edycji zegarka: {e}")
+            print(f"Błąd edycji samochodu: {e}")
             raise HTTPException(status_code=500, detail="Błąd bazy danych")
 
 @app.patch("/watches/{id}/price")
@@ -316,7 +316,7 @@ async def update_watch_price(id: int, price_data: WatchPriceUpdate, current_user
             price_data.price_pln, id
         )
         if not updated:
-            raise HTTPException(status_code=404, detail="Zegarek nie znaleziony")
+            raise HTTPException(status_code=404, detail="Samochód nie znaleziony")
         return dict(updated)
 
 @app.patch("/watches/{id}/status")
@@ -329,7 +329,7 @@ async def update_watch_status(id: int, status_data: WatchStatusUpdate, current_u
             status_data.status, id
         )
         if not updated:
-            raise HTTPException(status_code=404, detail="Zegarek nie znaleziony")
+            raise HTTPException(status_code=404, detail="Samochód nie znaleziony")
         return dict(updated)
 
 @app.patch("/inquiries/{id}/reply")
